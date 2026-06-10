@@ -1,0 +1,74 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper: Check for valid order ID prefix (M-GRID- followed by 6 digits)
+    function isValidId(id) {
+      return id is string && id.size() == 13 && id.matches('^M-GRID-[0-9]{6}$');
+    }
+
+    // Validation Blueprint for the Order Entity
+    function isValidOrder(data) {
+      return data.keys().hasAll(['id', 'customerName', 'customerEmail', 'purchasedProducts', 'paymentAmount', 'status', 'paymentMethod', 'createdAt'])
+        && data.keys().size() == 8
+        && data.id is string
+        && data.id.size() == 13
+        && data.customerName is string
+        && data.customerName.size() > 0
+        && data.customerName.size() <= 200
+        && data.customerEmail is string
+        && data.customerEmail.size() > 0
+        && data.customerEmail.size() <= 200
+        && data.customerEmail.matches('^[^@]+@[^@]+\\.[^@]+$')
+        && data.purchasedProducts is string
+        && data.purchasedProducts.size() > 0
+        && data.purchasedProducts.size() <= 1000
+        && data.paymentAmount is int
+        && data.paymentAmount >= 0
+        && data.paymentAmount <= 10000
+        && data.status is string
+        && (data.status == 'Pending' || data.status == 'Paid' || data.status == 'Delivered')
+        && data.paymentMethod is string
+        && (data.paymentMethod == 'Stripe' || data.paymentMethod == 'PayPal')
+        && data.createdAt is timestamp;
+    }
+
+    // Match Block for orders
+    match /orders/{orderId} {
+      // Allow individual retrieval by ID for tracking
+      allow get: if isValidId(orderId);
+
+      // Allow list of orders - denied entirely to prevent query scraping
+      allow list: if false;
+
+      // Allow creating an order with verified schema and timestamps
+      allow create: if isValidId(orderId)
+        && isValidOrder(request.resource.data)
+        && request.resource.data.id == orderId
+        && request.resource.data.createdAt == request.time;
+
+      // Allow updates to change status (Paid/Delivered) for testers
+      allow update: if isValidId(orderId)
+        && isValidOrder(request.resource.data)
+        && request.resource.data.id == orderId
+        && request.resource.data.customerEmail == resource.data.customerEmail
+        && request.resource.data.paymentAmount == resource.data.paymentAmount
+        && (
+          // Action: Update status and update timestamp in unison
+          (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'createdAt'])
+           && request.resource.data.createdAt == request.time)
+          ||
+          // Support idempotency (exact same payload)
+          (request.resource.data.diff(resource.data).affectedKeys().size() == 0)
+        );
+
+      // Deny direct deletions to prevent user fraud
+      allow delete: if false;
+    }
+  }
+}

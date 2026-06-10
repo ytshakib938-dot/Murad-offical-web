@@ -1,0 +1,54 @@
+{
+  "entities": {
+    "Order": {
+      "title": "Order",
+      "description": "Represents a customer order for system optimization services.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique order identifier prefixed with M-GRID-"
+        },
+        "customerName": {
+          "type": "string",
+          "description": "Full name of the purchasing customer."
+        },
+        "customerEmail": {
+          "type": "string",
+          "format": "email",
+          "description": "Contact email address of the customer."
+        },
+        "purchasedProducts": {
+          "type": "string",
+          "description": "A summary or list of purchased products and quantities."
+        },
+        "paymentAmount": {
+          "type": "integer",
+          "description": "The final price paid after discounts are applied."
+        },
+        "status": {
+          "type": "string",
+          "enum": ["Pending", "Paid", "Delivered"],
+          "description": "Current fulfillment status of the order."
+        },
+        "paymentMethod": {
+          "type": "string",
+          "enum": ["Stripe", "PayPal"],
+          "description": "The processing gateway utilized for this transaction."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp indicating when the order was created."
+        }
+      },
+      "required": ["id", "customerName", "customerEmail", "purchasedProducts", "paymentAmount", "status", "paymentMethod", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/orders/{orderId}": {
+      "schema": "Order",
+      "description": "Main collection storing customer license optimization orders."
+    }
+  }
+}

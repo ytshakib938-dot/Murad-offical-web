@@ -2,6 +2,10 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Brain, Cpu, Shield, Zap, Code, Globe, Activity, Layers, Lock, Check } from 'lucide-react';
 import { SplineScene } from '@/components/ui/splite';
 import { Spotlight } from '@/components/ui/spotlight';
+// @ts-ignore
+import pcOptimizationImg from '@/assets/images/pc_optimization_1781098978567.png';
+// @ts-ignore
+import brandLogo from '@/assets/images/murad_official_logo_1781106775615.png';
 
 export function HeroSection() {
   return (
@@ -141,7 +145,7 @@ export function ShowcaseSection() {
           
           {/* PC Optimization Image */}
           <img 
-            src="/src/assets/images/pc_optimization_1781098978567.png" 
+            src={pcOptimizationImg} 
             alt="PC Optimization" 
             referrerPolicy="no-referrer"
             className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700"
@@ -284,15 +288,18 @@ export function PricingSection() {
                 </ul>
               </div>
               
-              <button 
-                className={`w-full py-4 rounded-2xl font-medium transition-all duration-300 cursor-pointer ${
+              <a 
+                href="https://discord.gg/Stxn53TK"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`w-full py-4 rounded-2xl font-medium transition-all duration-300 cursor-pointer text-center block ${
                   plan.popular 
                     ? 'bg-blue-600 text-white hover:bg-blue-500 hover:scale-[1.02] shadow-[0_4px_20px_rgba(59,130,246,0.3)]' 
                     : 'bg-white/5 text-white hover:bg-white/10 border border-white/10 hover:border-white/20'
                 }`}
               >
-                {plan.cta}
-              </button>
+                Join Discord
+              </a>
             </div>
           ))}
         </div>
@@ -348,23 +355,36 @@ export function CtaSection() {
   );
 }
 
-export function Footer() {
+export function Footer({ 
+  onPrivacyClick,
+  onInfoClick
+}: { 
+  onPrivacyClick?: () => void;
+  onInfoClick?: (tab: 'documentation' | 'contact' | 'terms' | 'changelog' | 'security') => void;
+}) {
   const socialChannels = [
-    { name: 'TikTok', href: '#', hoverStyle: 'hover:text-[#ff0050] hover:border-[#ff0050]/40 hover:bg-[#ff0050]/5' },
-    { name: 'Facebook', href: '#', hoverStyle: 'hover:text-[#1877f2] hover:border-[#1877f2]/40 hover:bg-[#1877f2]/5' },
-    { name: 'Instagram', href: '#', hoverStyle: 'hover:text-[#e1306c] hover:border-[#e1306c]/40 hover:bg-[#e1306c]/5' },
-    { name: 'Discord', href: '#', hoverStyle: 'hover:text-[#5865f2] hover:border-[#5865f2]/40 hover:bg-[#5865f2]/5' },
+    { name: 'TikTok', href: 'https://www.tiktok.com/@muradbodyworksoffical', hoverStyle: 'hover:text-[#ff0050] hover:border-[#ff0050]/40 hover:bg-[#ff0050]/5' },
+    { name: 'Facebook', href: 'https://www.facebook.com/profile.php?id=61578274352175', hoverStyle: 'hover:text-[#1877f2] hover:border-[#1877f2]/40 hover:bg-[#1877f2]/5' },
+    { name: 'Instagram', href: 'https://www.instagram.com/exampleyt2010/', hoverStyle: 'hover:text-[#e1306c] hover:border-[#e1306c]/40 hover:bg-[#e1306c]/5' },
+    { name: 'Discord', href: 'https://discord.gg/Stxn53TK', hoverStyle: 'hover:text-[#5865f2] hover:border-[#5865f2]/40 hover:bg-[#5865f2]/5' },
   ];
 
   return (
     <footer className="py-16 border-t border-white/5 bg-[#020202]">
       <div className="max-w-[1400px] mx-auto px-6 grid grid-cols-2 md:grid-cols-6 gap-8 mb-16">
         <div className="col-span-2 md:col-span-2">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.4)]">
-              <div className="w-3 h-3 bg-white rounded-full" />
+          <div className="flex items-center gap-3 mb-6 cursor-pointer group" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+            <div className="w-10 h-10 rounded-xl overflow-hidden bg-black flex items-center justify-center shadow-[0_0_15px_rgba(255,255,255,0.1)] group-hover:shadow-[0_0_20px_rgba(255,255,255,0.2)] transition-all duration-300 border border-white/10">
+              <img 
+                src={brandLogo} 
+                alt="Murad Official" 
+                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" 
+                referrerPolicy="no-referrer"
+              />
             </div>
-            <span className="text-white font-semibold text-xl tracking-tight">Murad Official</span>
+            <span className="text-white font-bold text-lg tracking-tight bg-gradient-to-r from-white via-neutral-100 to-neutral-400 bg-clip-text text-transparent group-hover:text-blue-400 transition-all duration-300">
+              Murad Official
+            </span>
           </div>
           <p className="text-neutral-500 max-w-xs leading-relaxed mb-6">
             Elite system optimization, game-boosting adjustments, and custom FPS configuration guides designed by Shakib Hassan Murad to maximize your performance.
@@ -375,6 +395,8 @@ export function Footer() {
               <a 
                 key={idx}
                 href={soc.href}
+                target="_blank"
+                rel="noopener noreferrer"
                 className={`px-3 py-1 text-xs font-mono rounded-full bg-white/[0.02] border border-white/10 text-neutral-400 transition-all duration-300 ${soc.hoverStyle}`}
               >
                 {soc.name}
@@ -389,36 +411,123 @@ export function Footer() {
             <li><a href="#features" className="hover:text-white transition-colors">Features</a></li>
             <li><a href="#showcase" className="hover:text-white transition-colors">Integrations</a></li>
             <li><a href="#pricing" className="hover:text-white transition-colors">Pricing</a></li>
-            <li><a href="#" className="hover:text-white transition-colors">Changelog</a></li>
+            <li>
+              <button 
+                onClick={(e) => { e.preventDefault(); if (onInfoClick) onInfoClick('changelog'); }}
+                className="hover:text-white transition-colors text-left bg-transparent border-none cursor-pointer p-0"
+              >
+                Changelog
+              </button>
+            </li>
           </ul>
         </div>
         
         <div className="col-span-1">
           <h4 className="text-white font-medium mb-6">Resources</h4>
           <ul className="space-y-4 text-sm text-neutral-500">
-            <li><a href="#" className="hover:text-white transition-colors">Documentation</a></li>
-            <li><a href="#" className="hover:text-white transition-colors">API Reference</a></li>
-            <li><a href="#" className="hover:text-white transition-colors">Guides</a></li>
-            <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
+            <li>
+              <button 
+                onClick={(e) => { e.preventDefault(); if (onInfoClick) onInfoClick('documentation'); }}
+                className="hover:text-white transition-colors text-left bg-transparent border-none cursor-pointer p-0"
+              >
+                Documentation
+              </button>
+            </li>
+            <li>
+              <button 
+                onClick={(e) => { e.preventDefault(); if (onInfoClick) onInfoClick('documentation'); }}
+                className="hover:text-white transition-colors text-left bg-transparent border-none cursor-pointer p-0"
+              >
+                API Reference
+              </button>
+            </li>
+            <li>
+              <button 
+                onClick={(e) => { e.preventDefault(); if (onInfoClick) onInfoClick('documentation'); }}
+                className="hover:text-white transition-colors text-left bg-transparent border-none cursor-pointer p-0"
+              >
+                Guides
+              </button>
+            </li>
+            <li>
+              <button 
+                onClick={(e) => { e.preventDefault(); if (onInfoClick) onInfoClick('changelog'); }}
+                className="hover:text-white transition-colors text-left bg-transparent border-none cursor-pointer p-0"
+              >
+                Blog
+              </button>
+            </li>
           </ul>
         </div>
         
         <div className="col-span-1">
           <h4 className="text-white font-medium mb-6">Company</h4>
           <ul className="space-y-4 text-sm text-neutral-500">
-            <li><a href="#" className="hover:text-white transition-colors">About</a></li>
-            <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
-            <li><a href="#" className="hover:text-white transition-colors">Partners</a></li>
-            <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
+            <li>
+              <button 
+                onClick={(e) => { e.preventDefault(); if (onInfoClick) onInfoClick('contact'); }}
+                className="hover:text-white transition-colors text-left bg-transparent border-none cursor-pointer p-0"
+              >
+                About
+              </button>
+            </li>
+            <li>
+              <button 
+                onClick={(e) => { e.preventDefault(); if (onInfoClick) onInfoClick('contact'); }}
+                className="hover:text-white transition-colors text-left bg-transparent border-none cursor-pointer p-0"
+              >
+                Careers
+              </button>
+            </li>
+            <li>
+              <button 
+                onClick={(e) => { e.preventDefault(); if (onInfoClick) onInfoClick('contact'); }}
+                className="hover:text-white transition-colors text-left bg-transparent border-none cursor-pointer p-0"
+              >
+                Partners
+              </button>
+            </li>
+            <li>
+              <button 
+                onClick={(e) => { e.preventDefault(); if (onInfoClick) onInfoClick('contact'); }}
+                className="hover:text-white transition-colors text-left bg-transparent border-none cursor-pointer p-0"
+              >
+                Contact
+              </button>
+            </li>
           </ul>
         </div>
         
         <div className="col-span-1">
           <h4 className="text-white font-medium mb-6">Legal</h4>
           <ul className="space-y-4 text-sm text-neutral-500">
-            <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
-            <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
-            <li><a href="#" className="hover:text-white transition-colors">Security</a></li>
+            <li>
+              <button 
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (onPrivacyClick) onPrivacyClick();
+                }}
+                className="hover:text-white transition-colors text-left bg-transparent border-none cursor-pointer p-0"
+              >
+                Privacy Policy
+              </button>
+            </li>
+            <li>
+              <button 
+                onClick={(e) => { e.preventDefault(); if (onInfoClick) onInfoClick('terms'); }}
+                className="hover:text-white transition-colors text-left bg-transparent border-none cursor-pointer p-0"
+              >
+                Terms of Service
+              </button>
+            </li>
+            <li>
+              <button 
+                onClick={(e) => { e.preventDefault(); if (onInfoClick) onInfoClick('security'); }}
+                className="hover:text-white transition-colors text-left bg-transparent border-none cursor-pointer p-0"
+              >
+                Security
+              </button>
+            </li>
           </ul>
         </div>
       </div>
@@ -426,10 +535,10 @@ export function Footer() {
       <div className="max-w-[1400px] mx-auto px-6 pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between text-sm text-neutral-600">
         <div>© 2026 Murad Official. All rights reserved.</div>
         <div className="flex gap-6 mt-4 md:mt-0">
-          <a href="#" className="hover:text-white transition-colors">TikTok</a>
-          <a href="#" className="hover:text-white transition-colors">Facebook</a>
-          <a href="#" className="hover:text-white transition-colors">Instagram</a>
-          <a href="#" className="hover:text-white transition-colors">Discord</a>
+          <a href="https://www.tiktok.com/@muradbodyworksoffical" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">TikTok</a>
+          <a href="https://www.facebook.com/profile.php?id=61578274352175" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Facebook</a>
+          <a href="https://www.instagram.com/exampleyt2010/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Instagram</a>
+          <a href="https://discord.gg/Stxn53TK" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Discord</a>
         </div>
       </div>
     </footer>
