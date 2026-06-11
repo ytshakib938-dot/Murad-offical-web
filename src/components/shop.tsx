@@ -480,6 +480,21 @@ export function ShopSection({ isStandalonePage = false }: { isStandalonePage?: b
   // Track selected colors per product ID
   const [selectedColors, setSelectedColors] = useState<Record<string, ProductColor>>({});
   
+  // Detailed Product view state
+  const [selectedDetailProduct, setSelectedDetailProduct] = useState<Product | null>(null);
+  const [detailSelectedColor, setDetailSelectedColor] = useState<ProductColor | undefined>(undefined);
+  const [detailQuantity, setDetailQuantity] = useState<number>(1);
+
+  // Sync detail selections when a project is clicked
+  useEffect(() => {
+    if (selectedDetailProduct) {
+      setDetailSelectedColor(selectedDetailProduct.colors?.[0]);
+      setDetailQuantity(1);
+    } else {
+      setDetailSelectedColor(undefined);
+    }
+  }, [selectedDetailProduct]);
+  
   // Shopping Cart state
   interface CartItem {
     product: Product;
@@ -501,6 +516,24 @@ export function ShopSection({ isStandalonePage = false }: { isStandalonePage?: b
   useEffect(() => {
     localStorage.setItem('murad_cart', JSON.stringify(cart));
   }, [cart]);
+
+  // Add customized cart handler supporting specific quantities
+  const addToCartFromDetails = (product: Product, qty: number, color?: ProductColor) => {
+    setCart(prev => {
+      const existingIdx = prev.findIndex(item => 
+        item.product.id === product.id && 
+        (!color || item.selectedColor?.name === color.name)
+      );
+      if (existingIdx > -1) {
+        const updated = [...prev];
+        updated[existingIdx].quantity += qty;
+        return updated;
+      }
+      return [...prev, { product, selectedColor: color, quantity: qty }];
+    });
+    setSelectedDetailProduct(null);
+    setIsCartOpen(true);
+  };
 
   // Cart operations
   const addToCart = (product: Product) => {
@@ -716,7 +749,8 @@ export function ShopSection({ isStandalonePage = false }: { isStandalonePage?: b
                   exit={{ opacity: 0, y: -20, scale: 0.95 }}
                   transition={{ duration: 0.35, delay: index * 0.01, ease: "easeOut" }}
                   key={prod.id}
-                  className={`group relative p-7 rounded-[2.5rem] bg-neutral-950 border border-neutral-900 transition-all duration-300 flex flex-col justify-between overflow-hidden shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.6)] ${prod.brandColor}`}
+                  onClick={() => setSelectedDetailProduct(prod)}
+                  className={`group relative p-7 rounded-[2.5rem] bg-neutral-950 border border-neutral-900 transition-all duration-300 flex flex-col justify-between overflow-hidden shadow-xl hover:shadow-[0_20px_50px_rgba(0,0,0,0.6)] cursor-pointer hover:border-white/25 hover:bg-neutral-950/90 ${prod.brandColor}`}
                 >
                   {/* Premium Realistic Product Image Cover */}
                   <div className="relative h-56 rounded-3xl bg-neutral-900 border border-white/5 overflow-hidden mb-6 group-hover:border-white/15 transition-all">
@@ -777,6 +811,7 @@ export function ShopSection({ isStandalonePage = false }: { isStandalonePage?: b
                                 key={color.hex}
                                 onClick={(e) => {
                                   e.preventDefault();
+                                  e.stopPropagation(); // Prevent opening detail window
                                   setSelectedColors(prev => ({ ...prev, [prod.id]: color }));
                                 }}
                                 className={`w-7 h-7 rounded-full border-2 cursor-pointer transition-all ${
@@ -823,8 +858,11 @@ export function ShopSection({ isStandalonePage = false }: { isStandalonePage?: b
 
                     {/* Interactive Add to Cart button */}
                     <button 
-                      onClick={() => addToCart(prod)}
-                      className="px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-xs uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer border border-blue-500 active:scale-95"
+                      onClick={(e) => {
+                        e.stopPropagation(); // Avoid opening details window modal on click
+                        addToCart(prod);
+                      }}
+                      className="px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-xs uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer border border-blue-500 active:scale-95 z-10"
                     >
                       <ShoppingCart className="w-4 h-4 text-white" /> Add To Cart
                     </button>
@@ -1123,6 +1161,184 @@ export function ShopSection({ isStandalonePage = false }: { isStandalonePage?: b
                   Join & Paste in Ticket <ExternalLink className="w-4 h-4 text-black" />
                 </a>
               </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Interactive Product Details Window Overlay */}
+      <AnimatePresence>
+        {selectedDetailProduct && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto">
+            {/* Background absolute click overlay */}
+            <div 
+              className="absolute inset-0 cursor-pointer"
+              onClick={() => setSelectedDetailProduct(null)}
+            />
+            
+            <motion.div 
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="bg-neutral-950 border border-neutral-800 rounded-[2.5rem] max-w-4xl w-full p-6 md:p-10 relative shadow-2xl text-left overflow-hidden z-10 max-h-[92vh] flex flex-col"
+            >
+              {/* Close Button */}
+              <button 
+                onClick={() => setSelectedDetailProduct(null)}
+                className="absolute top-6 right-6 p-2 bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/10 rounded-full text-neutral-400 hover:text-white transition-all cursor-pointer z-50"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <div className="overflow-y-auto pr-2 flex-1 scrollbar-thin scrollbar-thumb-neutral-800">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start pt-4">
+                  
+                  {/* Left Column - Large Dynamic Representation Image */}
+                  <div className="flex flex-col gap-4">
+                    <div className="relative h-64 md:h-[350px] rounded-[2rem] bg-neutral-905 border border-white/5 overflow-hidden shadow-inner flex items-center justify-center">
+                      <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/80 to-transparent z-10 pointer-events-none" />
+                      
+                      <img 
+                        src={detailSelectedColor?.image || selectedDetailProduct.image} 
+                        alt={selectedDetailProduct.name} 
+                        className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                        referrerPolicy="no-referrer"
+                      />
+                      
+                      {/* Top watermark badges */}
+                      <div className="absolute top-4 left-4 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/85 backdrop-blur-md border border-white/10">
+                        <span className="w-2 h-2 rounded-full bg-blue-500 animate-ping" />
+                        <span className="text-[9px] font-mono tracking-widest text-neutral-300 uppercase font-bold">HD DEPICTION</span>
+                      </div>
+                    </div>
+
+                    {/* Quick security trust banner */}
+                    <div className="flex items-center gap-3 p-4 bg-black/40 border border-neutral-900 rounded-2xl">
+                      <Shield className="w-5 h-5 text-blue-500 shrink-0" />
+                      <div className="text-[11px] text-neutral-400 font-mono leading-relaxed">
+                        Pure anti-detect optimization. Setup & delivery managed directly by Murad experts via custom tickets.
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right Column - Product context & action fields */}
+                  <div className="flex flex-col gap-6 text-left">
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="px-3 py-1 rounded-full bg-blue-600/15 border border-blue-500/20 text-xs font-bold text-blue-400 uppercase tracking-wider font-mono">
+                          {selectedDetailProduct.categoryLabel}
+                        </span>
+                        {selectedDetailProduct.tag && (
+                          <span className="px-2.5 py-0.5 rounded-full bg-white text-black text-[10px] font-black uppercase tracking-wider">
+                            {selectedDetailProduct.tag}
+                          </span>
+                        )}
+                      </div>
+                      
+                      <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight leading-tight">
+                        {selectedDetailProduct.name}
+                      </h2>
+                    </div>
+
+                    <p className="text-xs md:text-sm text-neutral-400 leading-relaxed">
+                      {selectedDetailProduct.description}
+                    </p>
+
+                    {/* Interactive color picker in local scope */}
+                    {selectedDetailProduct.colors && selectedDetailProduct.colors.length > 0 && (
+                      <div className="p-4 bg-black/40 border border-neutral-900 rounded-2xl">
+                        <div className="text-[10px] text-neutral-400 font-mono mb-2.5 uppercase tracking-wider font-bold">
+                          Selected Color Scheme: <span className="text-blue-400 font-black">{detailSelectedColor?.name || selectedDetailProduct.colors[0].name}</span>
+                        </div>
+                        <div className="flex items-center gap-2.5">
+                          {selectedDetailProduct.colors.map((color) => {
+                            const isSelected = (detailSelectedColor?.hex || selectedDetailProduct.colors?.[0].hex) === color.hex;
+                            return (
+                              <button
+                                key={color.hex}
+                                onClick={() => setDetailSelectedColor(color)}
+                                className={`w-8 h-8 rounded-full border-2 cursor-pointer transition-all ${
+                                  isSelected ? 'border-white scale-110 shadow-lg' : 'border-transparent opacity-60 hover:opacity-100 hover:scale-105'
+                                }`}
+                                style={{ backgroundColor: color.hex }}
+                                title={color.name}
+                              />
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Compatibility specs container */}
+                    <div className="p-4 bg-neutral-900/60 border border-neutral-850 rounded-2xl flex items-center justify-between text-xs font-mono">
+                      <span className="text-neutral-500 uppercase font-bold">COMPATIBLE MATRIX</span>
+                      <span className="text-white font-black uppercase bg-white/5 border border-white/10 px-3 py-1 rounded-lg">
+                        {selectedDetailProduct.spec}
+                      </span>
+                    </div>
+
+                    {/* Features list bullet layout */}
+                    <div className="space-y-2.5">
+                      <div className="text-[10px] text-neutral-500 font-mono uppercase tracking-wider font-bold">INCLUDED FEATURES:</div>
+                      <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-left">
+                        {selectedDetailProduct.features.map((feat, idx) => (
+                          <li key={idx} className="flex items-start gap-2 text-xs text-neutral-300">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-blue-500 shrink-0 mt-0.5" />
+                            <span>{feat}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* Dynamic checkout/cart interface */}
+                    <div className="p-5 bg-[#080808] border border-neutral-900 rounded-[2rem] flex flex-col sm:flex-row items-center justify-between gap-4 mt-2">
+                      <div className="flex items-center gap-4 w-full sm:w-auto justify-between shrink-0">
+                        <div>
+                          <div className="text-[10px] text-neutral-500 font-mono tracking-widest uppercase">Target Tariff</div>
+                          <div className="text-2xl font-black text-white mt-0.5">
+                            {selectedDetailProduct.price === 0 ? 'FREE' : `$${selectedDetailProduct.price}`}
+                          </div>
+                        </div>
+
+                        {/* Quantity Counter selectors */}
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] uppercase font-mono text-neutral-500">Qty:</span>
+                          <div className="flex items-center bg-neutral-950 border border-neutral-850 rounded-lg">
+                            <button 
+                              onClick={() => setDetailQuantity(prev => Math.max(1, prev - 1))}
+                              className="p-1 hover:bg-neutral-900 text-neutral-450 hover:text-white rounded-l-lg transition-all cursor-pointer"
+                            >
+                              <Minus className="w-3.5 h-3.5" />
+                            </button>
+                            <span className="px-2.5 font-mono text-xs text-white font-bold text-center min-w-[24px]">
+                              {detailQuantity}
+                            </span>
+                            <button 
+                              onClick={() => setDetailQuantity(prev => prev + 1)}
+                              className="p-1 hover:bg-neutral-900 text-neutral-455 hover:text-white rounded-r-lg transition-all cursor-pointer"
+                            >
+                              <Plus className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Add directly to cart */}
+                      <button
+                        onClick={() => addToCartFromDetails(selectedDetailProduct, detailQuantity, detailSelectedColor)}
+                        className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xl active:scale-95"
+                      >
+                        <ShoppingCart className="w-4 h-4" />
+                        <span>Add to Cart • ${selectedDetailProduct.price === 0 ? '0' : (selectedDetailProduct.price * detailQuantity)}</span>
+                      </button>
+                    </div>
+
+                  </div>
+
+                </div>
+              </div>
+
             </motion.div>
           </div>
         )}
