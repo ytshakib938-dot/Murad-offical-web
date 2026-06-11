@@ -54,7 +54,7 @@ export function HeroSection() {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto"
           >
-            <a href="#shop" className="w-full sm:w-auto px-8 py-4 rounded-full bg-white text-black font-medium hover:bg-neutral-100 transition-all duration-300 hover:scale-[1.03] shadow-[0_0_20px_rgba(255,255,255,0.15)] hover:shadow-[0_0_30px_rgba(255,255,255,0.25)] flex items-center justify-center gap-2">
+            <a href="/shop" target="_blank" className="w-full sm:w-auto px-8 py-4 rounded-full bg-white text-black font-medium hover:bg-neutral-100 transition-all duration-300 hover:scale-[1.03] shadow-[0_0_20px_rgba(255,255,255,0.15)] hover:shadow-[0_0_30px_rgba(255,255,255,0.25)] flex items-center justify-center gap-2">
               Browse Systems <ArrowRight className="w-4 h-4" />
             </a>
             <a href="#pricing" className="w-full sm:w-auto px-8 py-4 rounded-full bg-transparent border border-white/[0.15] text-white font-medium hover:bg-white/[0.05] hover:border-white/30 transition-all duration-300 hover:shadow-[0_0_15px_rgba(255,255,255,0.05)] flex items-center justify-center gap-2">
@@ -253,7 +253,7 @@ export function PricingSection() {
           <p className="text-xl text-neutral-400">PC and Phone Optimization. Choose your performance tier to instantly supercharge game response and visual fluid dynamics.</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch font-sans">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch font-sans mb-20">
           {plans.map((plan, idx) => (
             <div 
               key={idx} 
@@ -303,6 +303,101 @@ export function PricingSection() {
             </div>
           ))}
         </div>
+
+        {/* Murad Official Network Hub (TikTok, Facebook, Instagram, Discord) under membership ones */}
+        <div id="socials" className="mt-24 pt-16 border-t border-white/5 text-center">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/5 rounded-full text-[10px] font-mono text-zinc-400 mb-6 border border-white/10 uppercase tracking-widest">
+            Murad Guild Channels
+          </div>
+          <h3 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight mb-3">Our Verified Social Grid</h3>
+          <p className="text-xs md:text-sm text-neutral-400 max-w-lg mx-auto mb-10 leading-relaxed">
+            Follow official community updates, live configuration test streams, and custom gaming clip reels across our corporate accounts.
+          </p>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+            {/* TikTok Logo card */}
+            <a 
+              href="https://www.tiktok.com/@muradbodyworksoffical" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="group relative p-6 rounded-3xl bg-neutral-950/60 border border-neutral-900 hover:border-neutral-800 transition-all duration-300 flex flex-col items-center gap-4 text-center hover:scale-[1.03] overflow-hidden shadow-lg hover:shadow-[#ff0050]/5"
+            >
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,0,80,0.04),transparent)] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              
+              <div className="w-16 h-16 rounded-2xl bg-black border border-white/5 flex items-center justify-center transition-all duration-300 group-hover:border-[#ff0050]/40 group-hover:bg-[#ff0050]/5 text-white shadow-xl relative z-10">
+                <svg className="w-8 h-8 text-white fill-current group-hover:text-[#ff0050] transition-colors" viewBox="0 0 24 24">
+                  <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.02 1.56 4.19 1.1 1.25 2.67 2.11 4.14 2.45v3.46c-1.39-.06-2.77-.52-3.88-1.4-.41-.33-.77-.73-1.09-1.15v6.52c-.01 1.76-.36 3.51-1.11 5.03-1.39 2.76-4.59 4.31-7.71 3.59-3.23-.75-5.63-3.79-5.46-7.1.18-3.56 3.42-6.39 7-5.91.01 1.29-.01 2.58-.01 3.86-1.57-.27-3.11.45-3.79 1.83-.8 1.63-.12 3.81 1.57 4.54 1.7.73 3.91.04 4.58-1.68.21-.51.27-1.07.25-1.62L12.535 0h-.01z" />
+                </svg>
+              </div>
+              <div className="relative z-10 text-left md:text-center w-full">
+                <div className="text-white font-bold text-sm tracking-tight text-center">TikTok Portal</div>
+                <div className="text-neutral-500 font-mono text-[10px] mt-1 text-center">@muradbodyworks</div>
+              </div>
+            </a>
+
+            {/* Facebook Logo card */}
+            <a 
+              href="https://www.facebook.com/profile.php?id=61578274352175" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="group relative p-6 rounded-3xl bg-neutral-950/60 border border-neutral-900 hover:border-neutral-800 transition-all duration-300 flex flex-col items-center gap-4 text-center hover:scale-[1.03] overflow-hidden shadow-lg hover:shadow-[#1877f2]/5"
+            >
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(24,119,242,0.04),transparent)] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              
+              <div className="w-16 h-16 rounded-2xl bg-black border border-white/5 flex items-center justify-center transition-all duration-300 group-hover:border-[#1877f2]/40 group-hover:bg-[#1877f2]/5 text-white shadow-xl relative z-10">
+                <svg className="w-8 h-8 text-white fill-current group-hover:text-[#1877f2] transition-colors" viewBox="0 0 24 24">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.992 4.388 11.023 10.125 11.967v-8.465H7.078v-3.502h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.49 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.502h-2.796v8.465C19.612 23.096 24 18.065 24 12.073z" />
+                </svg>
+              </div>
+              <div className="relative z-10 text-left md:text-center w-full">
+                <div className="text-white font-bold text-sm tracking-tight text-center">Facebook Node</div>
+                <div className="text-neutral-500 font-mono text-[10px] mt-1 text-center">Official Page</div>
+              </div>
+            </a>
+
+            {/* Instagram Logo card */}
+            <a 
+              href="https://www.instagram.com/exampleyt2010/" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="group relative p-6 rounded-3xl bg-neutral-950/60 border border-neutral-900 hover:border-neutral-800 transition-all duration-300 flex flex-col items-center gap-4 text-center hover:scale-[1.03] overflow-hidden shadow-lg hover:shadow-[#e1306c]/5"
+            >
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(225,48,108,0.04),transparent)] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              
+              <div className="w-16 h-16 rounded-2xl bg-black border border-white/5 flex items-center justify-center transition-all duration-300 group-hover:border-[#e1306c]/40 group-hover:bg-[#e1306c]/5 text-white shadow-xl relative z-10">
+                <svg className="w-8 h-8 text-white fill-none stroke-current stroke-2 group-hover:text-[#e1306c] transition-colors" viewBox="0 0 24 24">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                </svg>
+              </div>
+              <div className="relative z-10 text-left md:text-center w-full">
+                <div className="text-white font-bold text-sm tracking-tight text-center">Instagram Feed</div>
+                <div className="text-neutral-500 font-mono text-[10px] mt-1 text-center">@exampleyt2010</div>
+              </div>
+            </a>
+
+            {/* Discord Logo card */}
+            <a 
+              href="https://discord.gg/Stxn53TK" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="group relative p-6 rounded-3xl bg-neutral-950/60 border border-neutral-900 hover:border-neutral-800 transition-all duration-300 flex flex-col items-center gap-4 text-center hover:scale-[1.03] overflow-hidden shadow-lg hover:shadow-[#5865F2]/5"
+            >
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(88,101,242,0.04),transparent)] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              
+              <div className="w-16 h-16 rounded-2xl bg-black border border-white/5 flex items-center justify-center transition-all duration-300 group-hover:border-[#5865F2]/40 group-hover:bg-[#5865F2]/5 text-white shadow-xl relative z-10">
+                <svg className="w-8 h-8 text-white fill-current group-hover:text-[#5865f2] transition-colors" viewBox="0 0 24 24">
+                  <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.094 13.094 0 0 1-1.873-.894.077.077 0 0 1-.008-.128c.126-.093.252-.19.372-.287a.075.075 0 0 1 .077-.011c3.92 1.793 8.18 1.793 12.061 0a.073.073 0 0 1 .078.009c.12.099.246.195.373.289a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.156-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.156 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.156-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.156 2.418z" />
+                </svg>
+              </div>
+              <div className="relative z-10 text-left md:text-center w-full">
+                <div className="text-white font-bold text-sm tracking-tight text-center">Discord Guild</div>
+                <div className="text-neutral-500 font-mono text-[10px] mt-1 text-center">Official Server</div>
+              </div>
+            </a>
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -346,7 +441,7 @@ export function CtaSection() {
           <a href="#pricing" className="px-8 py-4 rounded-full bg-white text-black font-semibold hover:bg-neutral-100 transition-all duration-300 hover:scale-[1.03] shadow-[0_0_20px_rgba(255,255,255,0.15)] hover:shadow-[0_0_30px_rgba(255,255,255,0.25)]">
             Get Membership Admission
           </a>
-          <a href="#shop" className="px-8 py-4 rounded-full bg-transparent border border-white/[0.15] text-white font-semibold hover:bg-white/[0.05] hover:border-white/30 transition-all duration-300 hover:shadow-[0_0_15px_rgba(255,255,255,0.05)]">
+          <a href="/shop" target="_blank" className="px-8 py-4 rounded-full bg-transparent border border-white/[0.15] text-white font-semibold hover:bg-white/[0.05] hover:border-white/30 transition-all duration-300 hover:shadow-[0_0_15px_rgba(255,255,255,0.05)]">
             Explore Performance Shop
           </a>
         </div>
