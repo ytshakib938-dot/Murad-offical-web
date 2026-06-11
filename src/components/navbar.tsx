@@ -12,7 +12,7 @@ const navLinks = [
   { name: 'Shop', href: '/shop' },
 ];
 
-export function Navbar() {
+export function Navbar({ onShopClick }: { onShopClick: () => void }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -54,6 +54,12 @@ export function Navbar() {
             <a
               key={link.name}
               href={link.href}
+              onClick={(e) => {
+                if (link.name === 'Shop') {
+                  e.preventDefault();
+                  onShopClick();
+                }
+              }}
               className="text-[rgba(255,255,255,0.7)] hover:text-white text-sm font-medium transition-all duration-300 relative group"
             >
               {link.name}
@@ -64,9 +70,15 @@ export function Navbar() {
 
         {/* CTA Button */}
         <div className="hidden md:flex items-center">
-          <a href="/shop" className="relative inline-flex h-10 items-center justify-center rounded-[12px] bg-gradient-to-r from-blue-600 to-purple-600/80 px-6 text-sm font-medium text-white shadow-[0_0_15px_rgba(37,99,235,0.2)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_0_25px_rgba(37,99,235,0.4)] hover:from-blue-500 hover:to-purple-500/90 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:ring-offset-2 focus:ring-offset-[#0a0a0a]">
+          <button 
+            onClick={(e) => {
+              e.preventDefault();
+              onShopClick();
+            }}
+            className="relative inline-flex h-10 items-center justify-center rounded-[12px] bg-gradient-to-r from-blue-600 to-purple-600/80 px-6 text-sm font-medium text-white shadow-[0_0_15px_rgba(37,99,235,0.2)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_0_25px_rgba(37,99,235,0.4)] hover:from-blue-500 hover:to-purple-500/90 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:ring-offset-2 focus:ring-offset-[#0a0a0a] cursor-pointer"
+          >
             Explore Shop
-          </a>
+          </button>
         </div>
 
         {/* Mobile Menu Toggle */}
@@ -96,19 +108,28 @@ export function Navbar() {
                   key={link.name}
                   href={link.href}
                   className="text-[rgba(255,255,255,0.7)] hover:text-white text-base font-medium transition-colors duration-300"
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={(e) => {
+                    if (link.name === 'Shop') {
+                      e.preventDefault();
+                      onShopClick();
+                    }
+                    setIsMobileMenuOpen(false);
+                  }}
                 >
                   {link.name}
                 </a>
               ))}
               <div className="pt-5 border-t border-[rgba(255,255,255,0.06)] mt-2">
-                <a 
-                  href="/shop" 
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="w-full inline-flex h-11 items-center justify-center rounded-[12px] bg-gradient-to-r from-blue-600 to-purple-600/80 px-6 text-sm font-medium text-white shadow-[0_0_15px_rgba(37,99,235,0.2)] transition-all duration-300 hover:shadow-[0_0_25px_rgba(37,99,235,0.4)]"
+                <button 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onShopClick();
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="w-full inline-flex h-11 items-center justify-center rounded-[12px] bg-gradient-to-r from-blue-600 to-purple-600/80 px-6 text-sm font-medium text-white shadow-[0_0_15px_rgba(37,99,235,0.2)] transition-all duration-300 hover:shadow-[0_0_25px_rgba(37,99,235,0.4)] cursor-pointer"
                 >
                   Explore Shop
-                </a>
+                </button>
               </div>
             </div>
           </motion.div>

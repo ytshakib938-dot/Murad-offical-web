@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Navbar } from "@/components/navbar";
 import { 
   HeroSection, 
@@ -19,11 +20,37 @@ import brandLogo from '@/assets/images/murad_official_logo_1781106775615.png';
 
 export default function App() {
   const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
+  const [isShopOpen, setIsShopOpen] = useState(false);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const [activeInfoTab, setActiveInfoTab] = useState<InfoHubTab>('documentation');
   const [currentPath, setCurrentPath] = useState(() => window.location.pathname);
   const [currentSearch, setCurrentSearch] = useState(() => window.location.search);
   const [currentHash, setCurrentHash] = useState(() => window.location.hash);
+
+  // Lock body scroll when shop window modal is open
+  useEffect(() => {
+    if (isShopOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isShopOpen]);
+
+  // Handle ESC close command
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsShopOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   useEffect(() => {
     const handleLocationChange = () => {
@@ -115,9 +142,9 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#050505] text-white selection:bg-blue-500/30 font-sans">
-      <Navbar />
+      <Navbar onShopClick={() => setIsShopOpen(true)} />
       <main>
-        <HeroSection />
+        <HeroSection onShopClick={() => setIsShopOpen(true)} />
         <SocialProofSection />
         <FeaturesSection />
         <ShowcaseSection />
@@ -125,7 +152,7 @@ export default function App() {
         <PricingSection />
         <ShopSection isStandalonePage={false} />
         <TestimonialSection />
-        <CtaSection />
+        <CtaSection onShopClick={() => setIsShopOpen(true)} />
       </main>
       <Footer 
         onPrivacyClick={() => setIsPrivacyOpen(true)} 
@@ -141,6 +168,52 @@ export default function App() {
         activeTab={activeInfoTab}
         setActiveTab={setActiveInfoTab}
       />
+
+      {/* Modern Desktop Window Overlay Modal on same page */}
+      <AnimatePresence>
+        {isShopOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-2xl overflow-y-auto flex flex-col"
+          >
+            {/* Elegant glass headers and close handle */}
+            <div className="sticky top-0 z-[110] bg-[rgba(10,10,10,0.85)] backdrop-blur-md border-b border-white/[0.08] px-6 py-4 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg overflow-hidden bg-black flex items-center justify-center border border-white/10 shadow-[0_0_10px_rgba(255,255,255,0.05)]">
+                  <img 
+                    src={brandLogo} 
+                    alt="Murad Logo" 
+                    className="w-full h-full object-cover" 
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
+                <div>
+                  <div className="text-white font-bold text-sm tracking-tight flex items-center gap-2">
+                    <span>Murad Tuning & Sensitivities</span>
+                    <span className="px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 text-[9px] font-mono uppercase font-black">Official Shop</span>
+                  </div>
+                  <div className="text-[10px] font-mono text-neutral-500 uppercase tracking-wider">SECURE DIRECT CLIENT INSTANCE</div>
+                </div>
+              </div>
+              
+              <button 
+                onClick={() => setIsShopOpen(false)}
+                className="px-4 py-2 text-xs font-bold font-mono uppercase bg-red-500/10 hover:bg-neutral-800 border border-white/10 hover:border-white/30 rounded-lg text-neutral-300 hover:text-white transition-all cursor-pointer flex items-center gap-1.5"
+              >
+                <span>Close</span>
+                <span className="bg-white/10 px-1.5 py-0.5 rounded text-[9px]">ESC</span>
+              </button>
+            </div>
+
+            {/* Immersive standalone-like shop display window */}
+            <div className="flex-1">
+              <ShopSection isStandalonePage={true} />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

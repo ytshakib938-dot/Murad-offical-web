@@ -7,7 +7,7 @@ import pcOptimizationImg from '@/assets/images/pc_optimization_1781098978567.png
 // @ts-ignore
 import brandLogo from '@/assets/images/murad_official_logo_1781106775615.png';
 
-export function HeroSection() {
+export function HeroSection({ onShopClick }: { onShopClick: () => void }) {
   return (
     <section className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
       {/* Subtle background glow */}
@@ -54,9 +54,15 @@ export function HeroSection() {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto"
           >
-            <a href="/shop" className="w-full sm:w-auto px-8 py-4 rounded-full bg-white text-black font-medium hover:bg-neutral-100 transition-all duration-300 hover:scale-[1.03] shadow-[0_0_20px_rgba(255,255,255,0.15)] hover:shadow-[0_0_30px_rgba(255,255,255,0.25)] flex items-center justify-center gap-2">
+            <button 
+              onClick={(e) => {
+                e.preventDefault();
+                onShopClick();
+              }}
+              className="w-full sm:w-auto px-8 py-4 rounded-full bg-white text-black font-medium hover:bg-neutral-100 transition-all duration-300 hover:scale-[1.03] shadow-[0_0_20px_rgba(255,255,255,0.15)] hover:shadow-[0_0_30px_rgba(255,255,255,0.25)] flex items-center justify-center gap-2 cursor-pointer"
+            >
               Browse Systems <ArrowRight className="w-4 h-4" />
-            </a>
+            </button>
             <a href="#pricing" className="w-full sm:w-auto px-8 py-4 rounded-full bg-transparent border border-white/[0.15] text-white font-medium hover:bg-white/[0.05] hover:border-white/30 transition-all duration-300 hover:shadow-[0_0_15px_rgba(255,255,255,0.05)] flex items-center justify-center gap-2">
               Join Memberships
             </a>
@@ -430,7 +436,7 @@ export function TestimonialSection() {
   );
 }
 
-export function CtaSection() {
+export function CtaSection({ onShopClick }: { onShopClick: () => void }) {
   return (
     <section className="py-32 relative overflow-hidden border-t border-white/5 bg-[#030303]">
       <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 to-purple-600/5 blur-[150px] rounded-full max-w-4xl mx-auto pointer-events-none" />
@@ -441,9 +447,15 @@ export function CtaSection() {
           <a href="#pricing" className="px-8 py-4 rounded-full bg-white text-black font-semibold hover:bg-neutral-100 transition-all duration-300 hover:scale-[1.03] shadow-[0_0_20px_rgba(255,255,255,0.15)] hover:shadow-[0_0_30px_rgba(255,255,255,0.25)]">
             Get Membership Admission
           </a>
-          <a href="/shop" className="px-8 py-4 rounded-full bg-transparent border border-white/[0.15] text-white font-semibold hover:bg-white/[0.05] hover:border-white/30 transition-all duration-300 hover:shadow-[0_0_15px_rgba(255,255,255,0.05)]">
+          <button 
+            onClick={(e) => {
+              e.preventDefault();
+              onShopClick();
+            }}
+            className="px-8 py-4 rounded-full bg-transparent border border-white/[0.15] text-white font-semibold hover:bg-white/[0.05] hover:border-white/30 transition-all duration-300 hover:shadow-[0_0_15px_rgba(255,255,255,0.05)] cursor-pointer"
+          >
             Explore Performance Shop
-          </a>
+          </button>
         </div>
       </div>
     </section>
